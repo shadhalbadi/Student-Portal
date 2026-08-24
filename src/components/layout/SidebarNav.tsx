@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { Sparkles } from 'lucide-react'
 import { navItems } from '../../lib/nav'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { ProgressBar } from '../ui/ProgressBar'
 
 interface SidebarNavProps {
@@ -10,6 +11,8 @@ interface SidebarNavProps {
 
 /** محتوى القائمة الجانبية — مشترك بين سايدبار الديسكتوب ودرَج الموبايل. */
 export function SidebarNav({ onNavigate }: SidebarNavProps) {
+  const { t } = useLocale()
+
   return (
     <div className="flex h-full flex-col gap-6 p-4">
       <div className="flex items-center gap-2.5 px-2 pt-1">
@@ -17,8 +20,8 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
           <Sparkles size={18} />
         </span>
         <div className="leading-tight">
-          <p className="ltr text-sm font-extrabold text-ink-900">EduMentor AI</p>
-          <p className="text-[11px] text-slate-400">منصة التعلّم الذكية</p>
+          <p className="ltr text-sm font-extrabold text-ink-900">{t('app.name')}</p>
+          <p className="text-[11px] text-slate-400">{t('app.tagline')}</p>
         </div>
       </div>
 
@@ -39,7 +42,7 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
                 }
               >
                 <item.icon size={18} />
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1">{t(item.labelKey)}</span>
               </NavLink>
             </li>
           ))}
@@ -47,11 +50,11 @@ export function SidebarNav({ onNavigate }: SidebarNavProps) {
       </nav>
 
       <div className="rounded-2xl bg-gradient-to-b from-brand-100 to-brand-50 p-4">
-        <p className="text-xs font-bold text-ink-900">تقدّمك هذا الفصل</p>
+        <p className="text-xs font-bold text-ink-900">{t('nav.termProgress')}</p>
         <p className="mt-1 text-2xl font-extrabold text-brand-700">63%</p>
         <ProgressBar value={63} className="mt-2" />
         <p className="mt-2 text-[11px] leading-relaxed text-brand-800/70">
-          باقي 3 وحدات لإكمال المسار الحالي.
+          {t('nav.termProgressNote', { count: 3 })}
         </p>
       </div>
     </div>

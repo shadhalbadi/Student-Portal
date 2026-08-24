@@ -1,5 +1,6 @@
 import { CalendarCheck } from 'lucide-react'
 import type { Task } from '../../types'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Section } from '../ui/Card'
 import { TextLink } from '../ui/Button'
 import { EmptyState } from '../ui/EmptyState'
@@ -7,8 +8,10 @@ import { ListRowSkeleton } from '../ui/Skeleton'
 import { TaskRow } from '../tasks/TaskRow'
 
 export function UpcomingTasks({ tasks }: { tasks: Task[] }) {
+  const { t } = useLocale()
+
   return (
-    <Section title="المهام القادمة">
+    <Section title={t('tasks.title')}>
       {tasks.length > 0 ? (
         <>
           <ul className="space-y-2.5">
@@ -17,15 +20,15 @@ export function UpcomingTasks({ tasks }: { tasks: Task[] }) {
             ))}
           </ul>
           <div className="mt-4 text-center">
-            <TextLink to="/subjects">عرض جميع المهام</TextLink>
+            <TextLink to="/subjects">{t('tasks.viewAll')}</TextLink>
           </div>
         </>
       ) : (
         <EmptyState
           compact
           icon={CalendarCheck}
-          title="لا مهام قادمة"
-          description="خلصت كل واجباتك واختباراتك — استمتع بوقتك!"
+          title={t('tasks.emptyTitle')}
+          description={t('tasks.emptyBody')}
         />
       )}
     </Section>
@@ -33,8 +36,9 @@ export function UpcomingTasks({ tasks }: { tasks: Task[] }) {
 }
 
 export function UpcomingTasksSkeleton() {
+  const { t } = useLocale()
   return (
-    <Section title="المهام القادمة">
+    <Section title={t('tasks.title')}>
       <ul className="space-y-2.5">
         {Array.from({ length: 3 }).map((_, i) => (
           <ListRowSkeleton key={i} />

@@ -12,6 +12,16 @@
     />
   </head>
   <body>
+    <script>
+      // يضبط الاتجاه قبل أول رسم حتى لا يظهر وميض RTL عند اختيار الإنجليزية
+      try {
+        var saved = localStorage.getItem('edumentor.locale')
+        if (saved === 'en') {
+          document.documentElement.lang = 'en'
+          document.documentElement.dir = 'ltr'
+        }
+      } catch (e) {}
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

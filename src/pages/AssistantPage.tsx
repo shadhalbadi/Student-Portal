@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Bot, MessageSquarePlus, Minus, Send, X } from 'lucide-react'
 import {
   assistantDisclaimer,
@@ -7,7 +7,8 @@ import {
   chatThread,
 } from '../data/assistantData'
 import { useMockQuery } from '../hooks/useMockQuery'
-import type { ChatMessage } from '../types'
+import { useLocale } from '../i18n/LocaleProvider'
+import type { ChatMessage, ChatSeed } from '../types'
 import { Card } from '../components/ui/Card'
 import { EmptyState } from '../components/ui/EmptyState'
 import { SkeletonBlock } from '../components/ui/Skeleton'
@@ -20,13 +21,18 @@ const clock = () =>
 
 /** المساعد الذكي — نافذة محادثة (شاشة AI Chat في الفيقما) بردود mock محلية. */
 export function AssistantPage() {
-  const { data, isLoading } = useMockQuery<ChatMessage[]>(chatThread, [])
+  const { t, tx, dir } = useLocale()
+  const { data: seed, isLoading } = useMockQuery<ChatSeed[]>(chatThread, [])
   const [local, setLocal] = useState<ChatMessage[]>([])
   const [draft, setDraft] = useState('')
   const [typing, setTyping] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
 
-  const messages = [...(data ?? []), ...local]
+  // رسائل الـmock تُترجم عند العرض؛ رسائل الطالب تبقى كما كتبها
+  const messages = useMemo<ChatMessage[]>(
+    () => [...(seed ?? []).map((item) => ({ ...item, text: tx(item.text) })), ...local],
+    [seed, local, tx],
+  )
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
@@ -39,7 +45,10 @@ export function AssistantPage() {
     setDraft('')
     setTyping(true)
     setTimeout(() => {
-      setLocal((prev) => [...prev, { id: nextId(), author: 'bot', text: cannedReply, time: clock() }])
+      setLocal((prev) => [
+        ...prev,
+        { id: nextId(), author: 'bot', text: tx(cannedReply), time: clock() },
+      ])
       setTyping(false)
     }, 900)
   }
@@ -53,10 +62,18 @@ export function AssistantPage() {
         </span>
         <p className="ltr text-sm font-bold">EduMentor AI</p>
         <div className="ms-auto flex items-center gap-3">
-          <button type="button" className="text-white/60 hover:text-white" aria-label="تصغير">
+          <button
+            type="button"
+            className="text-white/60 hover:text-white"
+            aria-label={t('assistant.minimize')}
+          >
             <Minus size={16} />
           </button>
-          <button type="button" className="text-white/60 hover:text-white" aria-label="إغلاق">
+          <button
+            type="button"
+            className="text-white/60 hover:text-white"
+            aria-label={t('assistant.close')}
+          >
             <X size={16} />
           </button>
         </div>
@@ -65,7 +82,7 @@ export function AssistantPage() {
       {/* المحادثة */}
       <div className="h-[46vh] min-h-[280px] overflow-y-auto p-4 sm:h-[52vh]">
         {isLoading ? (
-          <SkeletonBlock label="جارٍ تحميل المحادثة">
+          <SkeletonBlock label={t('assistant.loading')}>
             <ChatSkeleton />
           </SkeletonBlock>
         ) : messages.length > 0 ? (
@@ -78,8 +95,8 @@ export function AssistantPage() {
         ) : (
           <EmptyState
             icon={MessageSquarePlus}
-            title="ابدأ محادثة جديدة"
-            description="اسأل عن أي درس أو مفهوم في مقرراتك، واختر أحد الاقتراحات بالأسفل للبدء."
+            title={t('assistant.emptyTitle')}
+            description={t('assistant.emptyBody')}
           />
         )}
         <div ref={endRef} />
@@ -88,16 +105,19 @@ export function AssistantPage() {
       {/* الاقتراحات */}
       {!isLoading && (
         <div className="flex flex-wrap gap-2 border-t border-slate-200/70 px-4 pt-3">
-          {chatSuggestions.map((suggestion) => (
-            <button
-              key={suggestion}
-              type="button"
-              onClick={() => send(suggestion)}
-              className="rounded-xl border border-brand-200 px-3 py-2 text-xs font-bold text-brand-700 transition-colors hover:bg-brand-50"
-            >
-              {suggestion}
-            </button>
-          ))}
+          {chatSuggestions.map((suggestion) => {
+            const label = tx(suggestion)
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={() => send(label)}
+                className="rounded-xl border border-brand-200 px-3 py-2 text-xs font-bold text-brand-700 transition-colors hover:bg-brand-50"
+              >
+                {label}
+              </button>
+            )
+          })}
         </div>
       )}
 
@@ -112,19 +132,20 @@ export function AssistantPage() {
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="اكتب سؤالك هنا..."
+          placeholder={t('assistant.inputPlaceholder')}
           className="h-11 flex-1 rounded-full border border-slate-200 px-4 text-sm outline-none transition-colors focus:border-brand-400"
         />
         <button
           type="submit"
           disabled={!draft.trim()}
           className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-700 text-white transition-colors hover:bg-brand-800 disabled:opacity-40"
-          aria-label="إرسال"
+          aria-label={t('assistant.send')}
         >
-          <Send size={17} className="-scale-x-100" />
+          {/* أيقونة الطائرة تُقلب في RTL حتى تشير لجهة الإرسال */}
+          <Send size={17} className={dir === 'rtl' ? '-scale-x-100' : ''} />
         </button>
       </form>
-      <p className="pb-4 text-center text-[11px] text-slate-400">{assistantDisclaimer}</p>
+      <p className="pb-4 text-center text-[11px] text-slate-400">{tx(assistantDisclaimer)}</p>
     </Card>
   )
 }

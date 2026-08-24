@@ -1,6 +1,7 @@
-import { ChevronLeft, Compass } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Compass } from 'lucide-react'
 import { guideIntro, guideTools } from '../data/guideData'
 import { useMockQuery } from '../hooks/useMockQuery'
+import { useLocale } from '../i18n/LocaleProvider'
 import type { GuideTool } from '../types'
 import { Card } from '../components/ui/Card'
 import { CardGrid } from '../components/ui/CardGrid'
@@ -12,6 +13,8 @@ import { GuideToolCard, GuideToolCardSkeleton } from '../components/guide/GuideT
 /** الدليل التفاعلي — كرت داكن للتعريف + شبكة بلاطات ملوّنة (شاشة 3 في الفيقما). */
 export function GuidePage() {
   const { data, isLoading } = useMockQuery<GuideTool[]>(guideTools, [])
+  const { t, tx, dir } = useLocale()
+  const Chevron = dir === 'rtl' ? ChevronLeft : ChevronRight
 
   return (
     <Card className="space-y-4 p-4 sm:space-y-5 sm:p-5">
@@ -19,14 +22,14 @@ export function GuidePage() {
         <span className="mx-auto grid size-12 place-items-center rounded-xl bg-white/10 text-2xl">
           🧩
         </span>
-        <h1 className="mt-4 text-lg font-extrabold sm:text-xl">{guideIntro.title}</h1>
+        <h1 className="mt-4 text-lg font-extrabold sm:text-xl">{tx(guideIntro.title)}</h1>
         <p className="mx-auto mt-2 max-w-xl text-xs leading-relaxed text-white/70 sm:text-sm">
-          {guideIntro.description}
+          {tx(guideIntro.description)}
         </p>
       </div>
 
       {isLoading ? (
-        <SkeletonBlock label="جارٍ تحميل أدوات الدليل">
+        <SkeletonBlock label={t('guide.loading')}>
           <CardGrid layout="tiles">
             {Array.from({ length: 6 }).map((_, i) => (
               <GuideToolCardSkeleton key={i} />
@@ -42,16 +45,16 @@ export function GuidePage() {
           </CardGrid>
           <div className="text-center">
             <TextButton>
-              عرض كل الأدوات
-              <ChevronLeft size={15} />
+              {t('guide.viewAll')}
+              <Chevron size={15} />
             </TextButton>
           </div>
         </>
       ) : (
         <EmptyState
           icon={Compass}
-          title="لا توجد أدوات متاحة"
-          description="لم تُفتح أدوات الدليل التفاعلي لمقرراتك الحالية بعد."
+          title={t('guide.emptyTitle')}
+          description={t('guide.emptyBody')}
         />
       )}
     </Card>

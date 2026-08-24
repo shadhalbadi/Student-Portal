@@ -1,6 +1,7 @@
-import { ArrowLeft, BookOpen, GraduationCap } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BookOpen, GraduationCap } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { Course } from '../../types'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Card } from '../ui/Card'
 import { IconTile } from '../ui/IconTile'
 import { ProgressBar } from '../ui/ProgressBar'
@@ -8,7 +9,10 @@ import { Skeleton } from '../ui/Skeleton'
 
 /** كرت مقرر في شبكة صفحة المقررات. */
 export function SubjectCard({ course }: { course: Course }) {
+  const { t, tx, dir } = useLocale()
   const done = course.progress >= 100
+  // السهم يتبع اتجاه القراءة
+  const Arrow = dir === 'rtl' ? ArrowLeft : ArrowRight
 
   return (
     <Card className="flex flex-col p-4 transition-shadow hover:shadow-[0_8px_24px_rgba(109,40,217,0.10)]">
@@ -21,37 +25,37 @@ export function SubjectCard({ course }: { course: Course }) {
             done ? 'bg-green-50 text-green-700' : 'bg-brand-50 text-brand-700'
           }`}
         >
-          {done ? 'مكتمل' : 'قيد الدراسة'}
+          {done ? t('subjects.statusDone') : t('subjects.statusActive')}
         </span>
       </div>
 
       <h3 className="mt-3 text-sm font-bold leading-snug text-ink-900 sm:mt-3.5 sm:text-base">
-        {course.titleAr}
+        {tx(course.title)}
       </h3>
-      {/* الفقرة تبقى RTL (فتُحاذى يمينًا) والنص اللاتيني معزول داخل span */}
+      {/* الفقرة تبقى باتجاه الصفحة والنص اللاتيني معزول داخل span */}
       <p className="mt-1 text-xs font-semibold text-slate-400">
         <span className="ltr">
-          {course.code} · {course.titleEn}
+          {course.code} · {course.titleLatin}
         </span>
       </p>
 
       <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
         <GraduationCap size={14} className="shrink-0 text-slate-400" />
-        {course.instructor}
+        {tx(course.instructor)}
       </p>
 
       <div className="mt-4 border-t border-slate-200/70 pt-3.5">
         <ProgressBar value={course.progress} tone={course.tone} showValue />
         <div className="mt-3 flex items-center justify-between gap-2">
           <span className="text-[11px] text-slate-400">
-            {course.lessonsDone} من {course.lessonsTotal} درسًا
+            {t('subjects.lessonsOf', { done: course.lessonsDone, total: course.lessonsTotal })}
           </span>
           <Link
             to={`/subjects/${course.id}`}
             className="inline-flex items-center gap-1 text-xs font-bold text-brand-700 hover:underline"
           >
-            تفاصيل المقرر
-            <ArrowLeft size={13} />
+            {t('subjects.details')}
+            <Arrow size={13} />
           </Link>
         </div>
       </div>

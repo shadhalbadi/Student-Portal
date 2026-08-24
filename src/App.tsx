@@ -8,6 +8,7 @@ import { GuidePage } from './pages/GuidePage'
 import { AssistantPage } from './pages/AssistantPage'
 import { ActivityPage } from './pages/ActivityPage'
 import { BadgesPage } from './pages/BadgesPage'
+import { ProfilePage } from './pages/ProfilePage'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="assistant" element={<AssistantPage />} />
           <Route path="activity" element={<ActivityPage />} />
           <Route path="badges" element={<BadgesPage />} />
+          <Route path="profile" element={<ProfilePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

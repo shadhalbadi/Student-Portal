@@ -1,6 +1,7 @@
 import { Award, CheckCircle2, Eye, FileText, MessageSquare, TrendingUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import type { ActivityEntry, ActivityKind, Tone } from '../../types'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { IconTile } from '../ui/IconTile'
 
 const kindStyle: Record<ActivityKind, { Icon: typeof Eye; tone: Tone; soft: boolean }> = {
@@ -14,19 +15,21 @@ const kindStyle: Record<ActivityKind, { Icon: typeof Eye; tone: Tone; soft: bool
 
 /** الدرجة والوقت — تنزل تحت النص على الموبايل وتبقى في الطرف على الشاشات الأوسع. */
 function Meta({ entry }: { entry: ActivityEntry }) {
+  const { tx } = useLocale()
   return (
     <>
       {entry.score && (
         <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-bold text-slate-600">
-          {entry.score}
+          {tx(entry.score)}
         </span>
       )}
-      <span className="text-[11px] whitespace-nowrap text-slate-400">{entry.time}</span>
+      <span className="whitespace-nowrap text-[11px] text-slate-400">{tx(entry.time)}</span>
     </>
   )
 }
 
 export function ActivityRow({ entry }: { entry: ActivityEntry }) {
+  const { tx } = useLocale()
   const { Icon, tone, soft } = kindStyle[entry.kind]
 
   return (
@@ -36,16 +39,16 @@ export function ActivityRow({ entry }: { entry: ActivityEntry }) {
       </IconTile>
 
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-ink-900">{entry.title}</p>
+        <p className="text-sm font-bold text-ink-900">{tx(entry.title)}</p>
         {entry.href ? (
           <Link
             to={entry.href}
             className="mt-0.5 block text-xs font-semibold text-accent-600 hover:underline sm:truncate"
           >
-            {entry.subtitle}
+            {tx(entry.subtitle)}
           </Link>
         ) : (
-          <p className="mt-0.5 text-xs text-slate-400 sm:truncate">{entry.subtitle}</p>
+          <p className="mt-0.5 text-xs text-slate-400 sm:truncate">{tx(entry.subtitle)}</p>
         )}
 
         {/* الموبايل: الدرجة والوقت تحت النص بدل إخفائهما */}

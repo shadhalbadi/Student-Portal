@@ -1,11 +1,13 @@
 import type { Course } from '../../types'
+import type { TranslationKey } from '../../i18n/ar'
+import { useLocale } from '../../i18n/LocaleProvider'
 
 const courseTabs = [
-  { id: 'overview', label: 'نظرة عامة' },
-  { id: 'content', label: 'المحتوى' },
-  { id: 'assignments', label: 'الواجبات' },
-  { id: 'quizzes', label: 'الاختبارات' },
-] as const
+  { id: 'overview', labelKey: 'course.tabOverview' },
+  { id: 'content', labelKey: 'course.tabContent' },
+  { id: 'assignments', labelKey: 'course.tabAssignments' },
+  { id: 'quizzes', labelKey: 'course.tabQuizzes' },
+] as const satisfies readonly { id: string; labelKey: TranslationKey }[]
 
 export type CourseTabId = (typeof courseTabs)[number]['id']
 
@@ -17,17 +19,19 @@ interface CourseHeaderProps {
 
 /** ترويسة المقرر + شريط التبويبات (الخط الأزرق تحت التبويب النشط كما في الفيقما). */
 export function CourseHeader({ course, activeTab, onTabChange }: CourseHeaderProps) {
+  const { t, tx } = useLocale()
+
   return (
     <div className="border-b border-slate-200/70 pb-0">
       {/* الاسم اللاتيني والرمز في جزيرة LTR واحدة حتى لا تتفكّك عند الالتفاف */}
       <h1 className="text-base font-extrabold leading-snug text-ink-900 sm:text-xl lg:text-[22px]">
-        دورة:{' '}
+        {t('course.prefix')}{' '}
         <span className="ltr">
-          {course.titleEn} ({course.code})
+          {course.titleLatin} ({course.code})
         </span>{' '}
-        – {course.titleAr}
+        – {tx(course.title)}
       </h1>
-      <p className="mt-2 text-xs text-slate-500 sm:text-sm">{course.description}</p>
+      <p className="mt-2 text-xs text-slate-500 sm:text-sm">{tx(course.description)}</p>
 
       <div
         role="tablist"
@@ -48,7 +52,7 @@ export function CourseHeader({ course, activeTab, onTabChange }: CourseHeaderPro
                   : 'border-transparent text-slate-400 hover:text-slate-600'
               }`}
             >
-              {tab.label}
+              {t(tab.labelKey)}
             </button>
           )
         })}

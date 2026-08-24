@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import { X } from 'lucide-react'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { SidebarNav } from './SidebarNav'
 import { TopBar } from './TopBar'
 import { StateSwitcher } from './StateSwitcher'
@@ -12,6 +13,7 @@ import { StateSwitcher } from './StateSwitcher'
 export function AppShell() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { pathname } = useLocation()
+  const { t, dir } = useLocale()
 
   // يقفل الدرَج عند تغيير الصفحة أو الضغط على Escape
   useEffect(() => setMenuOpen(false), [pathname])
@@ -20,6 +22,9 @@ export function AppShell() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
+
+  // الدرَج يخرج من جهة بداية الاتجاه: يمينًا في العربية ويسارًا في الإنجليزية
+  const hidden = dir === 'rtl' ? 'translateX(100%)' : 'translateX(-100%)'
 
   return (
     <div className="min-h-screen lg:flex">
@@ -39,16 +44,15 @@ export function AppShell() {
             menuOpen ? 'opacity-100' : 'opacity-0'
           }`}
         />
-        {/* الترجمة inline وليست بكلاس: الدرَج يفتح من اليمين (بداية الاتجاه في RTL) */}
         <div
           className="absolute inset-y-0 start-0 w-[280px] max-w-[85vw] bg-white shadow-2xl transition-transform duration-300"
-          style={{ transform: menuOpen ? 'translateX(0)' : 'translateX(100%)' }}
+          style={{ transform: menuOpen ? 'translateX(0)' : hidden }}
         >
           <button
             type="button"
             onClick={() => setMenuOpen(false)}
             className="absolute end-3 top-3 grid size-8 place-items-center rounded-full text-slate-400 hover:bg-slate-100"
-            aria-label="إغلاق القائمة"
+            aria-label={t('nav.closeMenu')}
           >
             <X size={18} />
           </button>

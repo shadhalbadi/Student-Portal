@@ -27,10 +27,11 @@ export function ListRowSkeleton({ trailing }: { trailing?: React.ReactNode }) {
 /** غلاف يعلن للقارئ الصوتي أن المحتوى قيد التحميل. */
 export function SkeletonBlock({
   children,
-  label = 'جارٍ تحميل البيانات',
+  label,
 }: {
   children: React.ReactNode
-  label?: string
+  /** نص للقارئ الصوتي — يُترجم في الصفحة المستدعية */
+  label: string
 }) {
   return (
     <div role="status" aria-busy="true" aria-live="polite">

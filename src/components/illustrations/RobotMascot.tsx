@@ -1,11 +1,14 @@
+import { useLocale } from '../../i18n/LocaleProvider'
+
 /** ماسكوت البانر — SVG مرسوم يدويًا ليطابق روبوت الفيقما بدون صور خارجية. */
 export function RobotMascot({ className = '' }: { className?: string }) {
+  const { t } = useLocale()
   return (
     <svg
       viewBox="0 0 220 190"
       className={className}
       role="img"
-      aria-label="روبوت EduMentor AI"
+      aria-label={t('illustration.robot')}
     >
       {/* قصاصات ملوّنة خلف الروبوت */}
       <g opacity="0.85">

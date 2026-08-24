@@ -5,21 +5,24 @@ import {
   History,
   LayoutDashboard,
   Sparkles,
+  UserRound,
   type LucideIcon,
 } from 'lucide-react'
+import type { TranslationKey } from '../i18n/ar'
 
 interface NavItem {
   to: string
-  label: string
+  labelKey: TranslationKey
   icon: LucideIcon
 }
 
 /** مصدر واحد للتنقّل — يستخدمه السايدبار ودرَج الموبايل وعنوان الشريط العلوي. */
 export const navItems: NavItem[] = [
-  { to: '/', label: 'لوحة الطالب', icon: LayoutDashboard },
-  { to: '/subjects', label: 'المقررات', icon: BookOpen },
-  { to: '/guide', label: 'الدليل التفاعلي', icon: Sparkles },
-  { to: '/assistant', label: 'المساعد الذكي', icon: Bot },
-  { to: '/activity', label: 'سجل النشاط', icon: History },
-  { to: '/badges', label: 'الشارات', icon: Award },
+  { to: '/', labelKey: 'nav.dashboard', icon: LayoutDashboard },
+  { to: '/subjects', labelKey: 'nav.subjects', icon: BookOpen },
+  { to: '/guide', labelKey: 'nav.guide', icon: Sparkles },
+  { to: '/assistant', labelKey: 'nav.assistant', icon: Bot },
+  { to: '/activity', labelKey: 'nav.activity', icon: History },
+  { to: '/badges', labelKey: 'nav.badges', icon: Award },
+  { to: '/profile', labelKey: 'nav.profile', icon: UserRound },
 ]

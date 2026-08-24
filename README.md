@@ -42,7 +42,9 @@ src/
 ├── App.tsx                   تعريف المسارات
 ├── index.css                 tokens التصميم + الأساسيات + كلاس skeleton
 ├── types.ts                  الموديل المشترك لكل الصفحات
-├── data/                     بيانات mock (mockData, guideData, assistantData, activityData)
+├── i18n/                     locale, ar, en, LocaleProvider
+├── data/                     بيانات mock (mockData, guideData, assistantData,
+│                             activityData, notificationsData)
 ├── hooks/
 │   ├── dataState.tsx         Context لحالة العرض (ready / loading / empty)
 │   └── useMockQuery.ts       يحاكي جلب البيانات من API
@@ -50,7 +52,8 @@ src/
 │   ├── nav.ts                مصدر واحد لعناصر التنقّل
 │   └── tones.ts              خرائط الألوان المستخرجة من الفيقما
 ├── components/
-│   ├── layout/               AppShell, SidebarNav, TopBar, StateSwitcher
+│   ├── layout/               AppShell, SidebarNav, TopBar, UserMenu,
+│   │                         NotificationsMenu, LocaleToggle, StateSwitcher
 │   ├── ui/                   Card, Section, PageHeader, CardGrid, FilterPills, Pill,
 │   │                         ButtonLink, TextLink, TextButton, ProgressBar, IconTile,
 │   │                         StatusBadge, Skeleton, ListRowSkeleton, EmptyState
@@ -97,6 +100,35 @@ src/
 | `/assistant` | المساعد الذكي (محادثة تعمل محليًا برد جاهز) |
 | `/activity` | سجل النشاط (مع تصفية) |
 | `/badges` | الشارات |
+| `/profile` | الملف الشخصي |
+
+## اللغات والاتجاه (i18n)
+
+عربي ⇄ إنجليزي من زر `ع / EN` في الشريط العلوي. التبديل يقلب النصوص **والاتجاه**
+معًا ويُحفظ في `localStorage`.
+
+الفصل الأساسي في التصميم:
+
+| النوع | كيف يُخزَّن | كيف يُقرأ |
+| --- | --- | --- |
+| تسميات الواجهة (أزرار، عناوين، رسائل فاضية) | مفتاح في `i18n/ar.ts` | `t('key')` |
+| المحتوى (اسم مقرر، نص رسالة، اسم شارة) | `Localized = { ar, en }` في `data/` | `tx(value)` |
+
+القاموس العربي هو المصدر: `TranslationKey` مستمدّ منه، و`en.ts` معرّف كـ
+`Record<TranslationKey, string>` — فأي مفتاح تنساه يصير **خطأ عند البناء** لا
+نصًّا ناقصًا في الواجهة. الوسوم `{name}` و`{count}` تُستبدل عند الاستدعاء
+(`t('subjects.count', { count: 6 })`).
+
+### ما احتاج انتباه في قلب الاتجاه
+
+- **الدرَج** — `translateX` خاصية فيزيائية لا تنقلب تلقائيًا، فيقرأ الاتجاه من
+  الـcontext: `+100%` في RTL و`-100%` في LTR.
+- **الأسهم** — `ArrowRight`/`ArrowLeft` و`ChevronLeft`/`ChevronRight` وأيقونة
+  الإرسال تُختار حسب الاتجاه، وإلا صارت تشير للجهة الخطأ.
+- **بقية التخطيط** لا يحتاج شي: كله مبني على خصائص منطقية (`start`/`end`,
+  `ms-auto`, `pe-*`) فينقلب مع `dir` على `<html>`.
+- **عنوان التبويب** يُضبط من الـProvider، وسكربت صغير في `index.html` يضبط
+  الاتجاه قبل أول رسم حتى لا يظهر وميض.
 
 ## الحالات الثلاث للواجهة
 

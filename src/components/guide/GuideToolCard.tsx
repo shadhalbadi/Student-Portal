@@ -1,9 +1,11 @@
 import { Play } from 'lucide-react'
 import type { GuideTool } from '../../types'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Skeleton } from '../ui/Skeleton'
 
 /** بلاطة ملوّنة بتدرّج — أيقونة تشغيل أعلى، إيموجي، ثم العنوان والرقم. */
 export function GuideToolCard({ tool }: { tool: GuideTool }) {
+  const { tx } = useLocale()
   return (
     <button
       type="button"
@@ -16,7 +18,7 @@ export function GuideToolCard({ tool }: { tool: GuideTool }) {
         {tool.emoji}
       </span>
       <span>
-        <span className="block text-sm font-bold">{tool.title}</span>
+        <span className="block text-sm font-bold">{tx(tool.title)}</span>
         <span className="ltr mt-1 block text-xs font-bold text-white/80">{tool.metric}</span>
       </span>
     </button>

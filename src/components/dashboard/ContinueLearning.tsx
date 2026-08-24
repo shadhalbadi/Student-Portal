@@ -1,32 +1,28 @@
 import { BookOpen } from 'lucide-react'
 import type { ContinueLearning as ContinueLearningData } from '../../types'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Section } from '../ui/Card'
 import { ButtonLink } from '../ui/Button'
 import { EmptyState } from '../ui/EmptyState'
 import { ProgressBar } from '../ui/ProgressBar'
 import { Skeleton } from '../ui/Skeleton'
 
-interface Props {
-  data: ContinueLearningData | null
-}
-
 /** "مواصلة التعلم" — اسم المقرر + الوحدة الحالية + شريط تقدم + زر متابعة. */
-export function ContinueLearningCard({ data }: Props) {
+export function ContinueLearningCard({ data }: { data: ContinueLearningData | null }) {
+  const { t, tx } = useLocale()
+
   return (
-    <Section title="مواصلة التعلم">
+    <Section title={t('continue.title')}>
       {data ? (
         <div className="rounded-2xl border border-slate-200/70 p-4">
           {/* الموبايل: العنوان فوق والزر بعرض كامل تحته */}
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="min-w-0">
               <h3 className="text-base font-bold text-ink-900">{data.courseTitle}</h3>
-              <p className="mt-1 text-xs text-slate-500 sm:text-sm">{data.unitLabel}</p>
+              <p className="mt-1 text-xs text-slate-500 sm:text-sm">{tx(data.unitLabel)}</p>
             </div>
-            <ButtonLink
-              to={`/subjects/${data.courseId}`}
-              className="shrink-0 max-sm:w-full"
-            >
-              متابعة التعلم
+            <ButtonLink to={`/subjects/${data.courseId}`} className="shrink-0 max-sm:w-full">
+              {t('continue.cta')}
             </ButtonLink>
           </div>
           <ProgressBar value={data.progress} showValue className="mt-4" />
@@ -35,11 +31,11 @@ export function ContinueLearningCard({ data }: Props) {
         <EmptyState
           compact
           icon={BookOpen}
-          title="ما بدأت أي مقرر"
-          description="اختر مقررًا من قائمة المقررات وابدأ أول وحدة."
+          title={t('continue.emptyTitle')}
+          description={t('continue.emptyBody')}
           action={
             <ButtonLink to="/subjects" variant="soft">
-              استعرض المقررات
+              {t('continue.emptyCta')}
             </ButtonLink>
           }
         />
@@ -49,8 +45,9 @@ export function ContinueLearningCard({ data }: Props) {
 }
 
 export function ContinueLearningSkeleton() {
+  const { t } = useLocale()
   return (
-    <Section title="مواصلة التعلم">
+    <Section title={t('continue.title')}>
       <div className="rounded-2xl border border-slate-200/70 p-4">
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1 space-y-2">

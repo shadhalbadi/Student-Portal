@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { History } from 'lucide-react'
 import { activityGroups, type ActivityFilterId } from '../data/activityData'
 import { useMockQuery } from '../hooks/useMockQuery'
+import { useLocale } from '../i18n/LocaleProvider'
 import type { ActivityGroup } from '../types'
 import { Card } from '../components/ui/Card'
 import { TextButton } from '../components/ui/Button'
@@ -25,6 +26,7 @@ const filterGroups = (groups: ActivityGroup[], filter: ActivityFilterId): Activi
  * التصفية: لوحة جانبية على الديسكتوب، وشريط حبّات فوق السجل على الموبايل.
  */
 export function ActivityPage() {
+  const { t, tx } = useLocale()
   const [filter, setFilter] = useState<ActivityFilterId>('all')
   const { data, isLoading } = useMockQuery<ActivityGroup[]>(activityGroups, [])
 
@@ -37,15 +39,15 @@ export function ActivityPage() {
       {/* الخط الزمني */}
       <Card className="min-w-0 p-4 sm:p-5">
         <div className="text-center">
-          <h1 className="text-lg font-extrabold text-ink-900 sm:text-xl">سجل النشاط</h1>
+          <h1 className="text-lg font-extrabold text-ink-900 sm:text-xl">{t('activity.title')}</h1>
           <p className="mt-1 text-xs text-slate-400 sm:text-sm">
-            عرض نشاطك وتفاعلاتك التعليمية بالتفصيل
+            {t('activity.subtitle')}
           </p>
         </div>
 
         <div className="mt-5">
           {isLoading ? (
-            <SkeletonBlock label="جارٍ تحميل سجل النشاط">
+            <SkeletonBlock label={t('activity.loading')}>
               <div className="space-y-5">
                 {Array.from({ length: 2 }).map((_, g) => (
                   <div key={g}>
@@ -64,7 +66,7 @@ export function ActivityPage() {
               <div className="space-y-5">
                 {groups.map((group) => (
                   <section key={group.id}>
-                    <h2 className="mb-2.5 text-xs font-bold text-slate-400">{group.label}</h2>
+                    <h2 className="mb-2.5 text-xs font-bold text-slate-400">{tx(group.label)}</h2>
                     <ul className="space-y-2.5">
                       {group.entries.map((entry) => (
                         <ActivityRow key={entry.id} entry={entry} />
@@ -74,17 +76,17 @@ export function ActivityPage() {
                 ))}
               </div>
               <div className="mt-5 text-center">
-                <TextButton>عرض المزيد من النشاط</TextButton>
+                <TextButton>{t('activity.viewMore')}</TextButton>
               </div>
             </>
           ) : (
             <EmptyState
               icon={History}
-              title={filter === 'all' ? 'لا يوجد نشاط مسجّل' : 'ما فيه نشاط بهذا الفلتر'}
+              title={
+                filter === 'all' ? t('activity.emptyTitle') : t('activity.filterEmptyTitle')
+              }
               description={
-                filter === 'all'
-                  ? 'ابدأ بمشاهدة درس أو حل اختبار قصير وسيظهر نشاطك هنا.'
-                  : 'جرّب فلترًا ثانيًا أو اختر "كل الأنشطة".'
+                filter === 'all' ? t('activity.emptyBody') : t('activity.filterEmptyBody')
               }
             />
           )}

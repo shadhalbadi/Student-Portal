@@ -1,0 +1,177 @@
+import type { TranslationKey } from './ar'
+
+/** النوع `Record<TranslationKey, string>` يمنع نسيان أي مفتاح — خطأ عند البناء. */
+export const en: Record<TranslationKey, string> = {
+  // ── Navigation & shell ─────────────────────────────────────────────
+  'app.name': 'EduMentor AI',
+  'app.title': 'EduMentor AI — Student Portal',
+  'app.tagline': 'Smart learning platform',
+  'nav.dashboard': 'Dashboard',
+  'nav.subjects': 'Courses',
+  'nav.guide': 'Interactive guide',
+  'nav.assistant': 'AI assistant',
+  'nav.activity': 'Activity log',
+  'nav.badges': 'Badges',
+  'nav.profile': 'Profile',
+  'nav.openMenu': 'Open menu',
+  'nav.closeMenu': 'Close menu',
+  'nav.search': 'Search',
+  'nav.searchPlaceholder': 'Search for a course or lesson…',
+  'nav.termProgress': 'Your progress this term',
+  'nav.termProgressNote': '{count} units left to finish the current track.',
+  'nav.language': 'Language',
+
+  // ── User menu ──────────────────────────────────────────────────────
+  'user.settings': 'Settings',
+  'user.logout': 'Sign out',
+
+  // ── Notifications ──────────────────────────────────────────────────
+  'notifications.title': 'Notifications',
+  'notifications.unreadLabel': 'Notifications, {count} unread',
+  'notifications.markAllRead': 'Mark all as read',
+  'notifications.emptyTitle': 'No notifications',
+  'notifications.emptyBody': "You're all caught up — we'll let you know when something arrives.",
+
+  // ── Shared states ──────────────────────────────────────────────────
+  'state.label': 'State',
+  'state.ready': 'Data',
+  'state.loading': 'Loading',
+  'state.empty': 'Empty',
+  'state.loadingData': 'Loading data',
+  'status.completed': 'Completed',
+  'status.available': 'Available',
+  'status.locked': 'Locked',
+
+  // ── Dashboard ──────────────────────────────────────────────────────
+  'dashboard.welcome': 'Welcome back, {name}!',
+  'dashboard.welcomeSub': 'Keep going on your smart learning journey',
+  'dashboard.loading': 'Loading your dashboard',
+  'stats.enrolled': 'Enrolled courses',
+  'stats.progress': 'Overall progress',
+  'stats.lessons': 'Lessons completed',
+  'stats.badges': 'Badges',
+  'stats.emptyTitle': 'No statistics yet',
+  'stats.emptyBody': 'Enrol in your first course and your progress will show up here.',
+  'continue.title': 'Continue learning',
+  'continue.cta': 'Continue',
+  'continue.emptyTitle': "You haven't started a course",
+  'continue.emptyBody': 'Pick a course from your list and start the first unit.',
+  'continue.emptyCta': 'Browse courses',
+  'tasks.title': 'Upcoming tasks',
+  'tasks.viewAll': 'View all tasks',
+  'tasks.emptyTitle': 'No upcoming tasks',
+  'tasks.emptyBody': 'Every assignment and quiz is done — enjoy the break!',
+
+  // ── Courses ────────────────────────────────────────────────────────
+  'subjects.title': 'Courses',
+  'subjects.count': '{count} courses enrolled this term',
+  'subjects.loading': 'Loading your courses…',
+  'subjects.loadingList': 'Loading courses',
+  'subjects.filterAll': 'All',
+  'subjects.filterActive': 'In progress',
+  'subjects.filterDone': 'Completed',
+  'subjects.statusDone': 'Completed',
+  'subjects.statusActive': 'In progress',
+  'subjects.lessonsOf': '{done} of {total} lessons',
+  'subjects.details': 'Course details',
+  'subjects.emptyTitle': 'No courses enrolled',
+  'subjects.emptyBody':
+    "You haven't enrolled in any course yet. Talk to your academic advisor or wait for next term's registration.",
+  'subjects.filterEmptyTitle': 'No courses match this filter',
+  'subjects.filterEmptyBody': 'Try another filter to see the rest of your courses.',
+
+  // ── Course detail ──────────────────────────────────────────────────
+  'course.backToAll': 'All courses',
+  'course.prefix': 'Course:',
+  'course.loading': 'Loading course details',
+  'course.tabOverview': 'Overview',
+  'course.tabContent': 'Content',
+  'course.tabAssignments': 'Assignments',
+  'course.tabQuizzes': 'Quizzes',
+  'course.unit': 'Unit {order} – {title}',
+  'course.unitLockedBody': 'This unit unlocks once you finish the previous ones.',
+  'course.unitsEmptyTitle': 'No units published yet',
+  'course.unitsEmptyBody': "Your instructor hasn't added unit content yet. Check back later.",
+  'course.assignmentsEmptyTitle': 'No assignments',
+  'course.assignmentsEmptyBody': 'There are no assignments due in this course right now.',
+  'course.quizzesEmptyTitle': 'No quizzes published',
+  'course.quizzesEmptyBody':
+    'Every quiz your instructor opens will appear here with its date and grade.',
+  'course.notFoundTitle': 'Course not found',
+  'course.notFoundBody': "That link doesn't point to a course you're enrolled in.",
+  'course.notFoundCta': 'Back to courses',
+  'course.infoTitle': 'Course information',
+  'course.instructorBadge': 'Msg',
+  'course.requirementsTitle': 'Completion requirements',
+  'course.viewRequirements': 'View all requirements',
+  'course.currentProgress': 'Current course progress',
+  'course.completedLessons': "You've completed {done} of {total} lessons.",
+
+  // ── Interactive guide ──────────────────────────────────────────────
+  'guide.loading': 'Loading guide tools',
+  'guide.viewAll': 'View all tools',
+  'guide.emptyTitle': 'No tools available',
+  'guide.emptyBody': 'The interactive guide tools are not open for your current courses yet.',
+
+  // ── AI assistant ───────────────────────────────────────────────────
+  'assistant.minimize': 'Minimise',
+  'assistant.close': 'Close',
+  'assistant.send': 'Send',
+  'assistant.inputPlaceholder': 'Type your question here…',
+  'assistant.loading': 'Loading the conversation',
+  'assistant.emptyTitle': 'Start a new conversation',
+  'assistant.emptyBody':
+    'Ask about any lesson or concept in your courses, or pick one of the suggestions below.',
+
+  // ── Activity log ───────────────────────────────────────────────────
+  'activity.title': 'Activity log',
+  'activity.subtitle': 'A detailed view of your learning activity',
+  'activity.loading': 'Loading your activity log',
+  'activity.filterTitle': 'Filter',
+  'activity.export': 'Export log',
+  'activity.exportShort': 'Export',
+  'activity.viewMore': 'Show more activity',
+  'activity.emptyTitle': 'No activity recorded',
+  'activity.emptyBody': 'Watch a lesson or take a quiz and your activity will show up here.',
+  'activity.filterEmptyTitle': 'No activity matches this filter',
+  'activity.filterEmptyBody': 'Try another filter, or pick "All activity".',
+
+  // ── Badges ─────────────────────────────────────────────────────────
+  'badges.title': 'Badges',
+  'badges.count': "You've earned {earned} of {total} badges",
+  'badges.loading': 'Loading badges',
+  'badges.loadingShort': 'Loading your badges…',
+  'badges.earnedAt': 'Earned · {when}',
+  'badges.emptyTitle': 'No badges yet',
+  'badges.emptyBody': 'Finish lessons and quizzes and badges will start showing up here.',
+
+  // ── Profile ────────────────────────────────────────────────────────
+  'profile.loading': 'Loading your profile',
+  'profile.edit': 'Edit profile',
+  'profile.studentId': 'Student ID:',
+  'profile.academicTitle': 'Academic information',
+  'profile.academicEmptyTitle': 'No academic information',
+  'profile.academicEmptyBody':
+    'Enrol in courses this term and your academic details will appear here.',
+  'profile.badgesTitle': 'Latest badges',
+  'profile.badgesEmptyTitle': 'No badges yet',
+  'profile.badgesEmptyBody': 'Finish lessons and quizzes and badges will start showing up here.',
+  'profile.viewAllBadges': 'View all badges',
+  'profile.fieldCollege': 'College',
+  'profile.fieldMajor': 'Major',
+  'profile.fieldLevel': 'Level',
+  'profile.fieldAdvisor': 'Academic advisor',
+  'profile.fieldJoined': 'Enrolment date',
+  'profile.statGpa': 'GPA',
+  'profile.statCredits': 'Credits earned',
+
+  // ── Misc ───────────────────────────────────────────────────────────
+  'illustration.robot': 'EduMentor AI robot',
+  'activityFilter.all': 'All activity',
+  'activityFilter.watched': 'Lessons watched',
+  'activityFilter.chat': 'AI conversations',
+  'activityFilter.quiz': 'Short quizzes',
+  'activityFilter.attempt': 'Quiz attempts',
+  'activityFilter.progress': 'Progress & achievements',
+  'activityFilter.badge': 'Badges',
+}

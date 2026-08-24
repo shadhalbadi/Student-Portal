@@ -1,32 +1,28 @@
 import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { ArrowRight, ClipboardList, FileQuestion, Layers, SearchX } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ClipboardList, FileQuestion, Layers, SearchX } from 'lucide-react'
 import { findCourse, tasks as allTasks } from '../data/mockData'
 import { useMockQuery } from '../hooks/useMockQuery'
+import { useLocale } from '../i18n/LocaleProvider'
 import type { Course } from '../types'
 import { Card } from '../components/ui/Card'
 import { ButtonLink } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
 import { TaskRow } from '../components/tasks/TaskRow'
-import { SkeletonBlock, Skeleton } from '../components/ui/Skeleton'
+import { Skeleton, SkeletonBlock } from '../components/ui/Skeleton'
 import { CourseHeader, type CourseTabId } from '../components/subjects/CourseHeader'
 import { UnitCard, UnitCardSkeleton } from '../components/subjects/UnitCard'
-import {
-  CourseInfoPanel,
-  CourseInfoPanelSkeleton,
-} from '../components/subjects/CourseInfoPanel'
+import { CourseInfoPanel, CourseInfoPanelSkeleton } from '../components/subjects/CourseInfoPanel'
 
 /** صفحة تفاصيل المقرر — مطابقة لشاشة Course في الفيقما (وحدات + عمود معلومات). */
 export function CourseDetailPage() {
   const { courseId = '' } = useParams()
   const [tab, setTab] = useState<CourseTabId>('overview')
+  const { t, dir } = useLocale()
 
   const source = findCourse(courseId)
   // نسخة "فاضية" من نفس المقرر: الترويسة موجودة والوحدات لا — لعرض Empty State
-  const { data: course, isLoading } = useMockQuery(
-    source,
-    source && { ...source, units: [] },
-  )
+  const { data: course, isLoading } = useMockQuery(source, source && { ...source, units: [] })
 
   // معرّف مقرر غير موجود — ما يحتاج تحميل
   if (!source) return <NotFound />
@@ -34,6 +30,7 @@ export function CourseDetailPage() {
   if (isLoading || !course) return <CourseDetailSkeleton />
 
   const courseTasks = allTasks.filter((task) => task.courseId === course.id)
+  const BackArrow = dir === 'rtl' ? ArrowRight : ArrowLeft
 
   return (
     <div className="space-y-4 sm:space-y-5">
@@ -41,8 +38,8 @@ export function CourseDetailPage() {
         to="/subjects"
         className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-brand-700"
       >
-        <ArrowRight size={14} />
-        كل المقررات
+        <BackArrow size={14} />
+        {t('course.backToAll')}
       </Link>
 
       <Card className="p-4 sm:p-5">
@@ -74,16 +71,16 @@ export function CourseDetailPage() {
             ) : (
               <EmptyState
                 icon={ClipboardList}
-                title="لا توجد واجبات"
-                description="ما فيه واجبات مطلوبة في هذا المقرر حاليًا."
+                title={t('course.assignmentsEmptyTitle')}
+                description={t('course.assignmentsEmptyBody')}
               />
             ))}
 
           {tab === 'quizzes' && (
             <EmptyState
               icon={FileQuestion}
-              title="لا اختبارات منشورة"
-              description="سيظهر هنا كل اختبار يفتحه أستاذ المقرر مع موعده ودرجته."
+              title={t('course.quizzesEmptyTitle')}
+              description={t('course.quizzesEmptyBody')}
             />
           )}
         </div>
@@ -93,12 +90,14 @@ export function CourseDetailPage() {
 }
 
 function UnitList({ course }: { course: Course }) {
+  const { t } = useLocale()
+
   if (course.units.length === 0) {
     return (
       <EmptyState
         icon={Layers}
-        title="ما نُشرت وحدات بعد"
-        description="أستاذ المقرر لم يضف محتوى الوحدات حتى الآن. راجع الصفحة لاحقًا."
+        title={t('course.unitsEmptyTitle')}
+        description={t('course.unitsEmptyBody')}
       />
     )
   }
@@ -112,8 +111,9 @@ function UnitList({ course }: { course: Course }) {
 }
 
 function CourseDetailSkeleton() {
+  const { t } = useLocale()
   return (
-    <SkeletonBlock label="جارٍ تحميل بيانات المقرر">
+    <SkeletonBlock label={t('course.loading')}>
       <div className="space-y-4 sm:space-y-5">
         <Skeleton className="h-4 w-24" />
         <Card className="p-4 sm:p-5">
@@ -142,13 +142,14 @@ function CourseDetailSkeleton() {
 }
 
 function NotFound() {
+  const { t } = useLocale()
   return (
     <Card>
       <EmptyState
         icon={SearchX}
-        title="المقرر غير موجود"
-        description="الرابط الذي فتحته لا يشير إلى مقرر مسجّل باسمك."
-        action={<ButtonLink to="/subjects">رجوع إلى المقررات</ButtonLink>}
+        title={t('course.notFoundTitle')}
+        description={t('course.notFoundBody')}
+        action={<ButtonLink to="/subjects">{t('course.notFoundCta')}</ButtonLink>}
       />
     </Card>
   )
